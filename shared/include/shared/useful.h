@@ -1,5 +1,5 @@
 #include <memory>
-
+#include <variant>
 #include <boost/multiprecision/gmp.hpp>
 
 namespace mp = boost::multiprecision;

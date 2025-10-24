@@ -16,15 +16,15 @@ void ReadEvalPrintLoop::Run()
 
 void ReadEvalPrintLoop::PrintBanner()
 {
-    std::println("============================================================");
-    std::println("Infinitas Programming Language Copyright 2025.");
-    std::println("Visit https://docs.0xinfinity.dev for documentation.");
-    std::println("This project is open-source and community governed.");
-    std::println("Licensed under Apache 2.");
-    std::println("============================================================");
-    std::println("[BEWARE] Right now runtime errors do not reset virtual-machine state during REPL. In rare cases, this could lead to undefined behavior (2.2.5) for operations executed after a runtime error.");
-    std::println("[BEWARE] This behavior will be specified soon and the virtual-machine will return to the last successful state.");
-    std::println("============================================================");
+    std::cout << "============================================================" << std::endl;
+    std::cout << "Infinitas Programming Language Copyright 2025." << std::endl;
+    std::cout << "Visit https://docs.0xinfinity.dev for documentation." << std::endl;
+    std::cout << "This project is open-source and community governed." << std::endl;
+    std::cout << "Licensed under Apache 2." << std::endl;
+    std::cout << "============================================================" << std::endl;
+    std::cout << "[BEWARE] Right now runtime errors do not reset virtual-machine state during REPL. In rare cases, this could lead to undefined behavior (2.2.5) for operations executed after a runtime error." << std::endl;
+    std::cout << "[BEWARE] This behavior will be specified soon and the virtual-machine will return to the last successful state." << std::endl;
+    std::cout << "============================================================" << std::endl;
 }
 
 void ReadEvalPrintLoop::Loop()
@@ -44,7 +44,7 @@ void ReadEvalPrintLoop::Loop()
 
 std::string ReadEvalPrintLoop::GetUserInput()
 {
-    std::print(">>> ");
+    std::cout << ">>> ";
     std::string input;
 
     if (!std::getline(std::cin, input))
