@@ -1,0 +1,5 @@
+infinitas (0.0.4-1) UNRELEASED; urgency=high
+
+  * Added strings, runtime error handling, parser error handling. (Closes: #nnnn)  <nnnn is the bug number of your ITP>
+
+ -- Infinity <25598-infinity@users.noreply.salsa.debian.org>  Thu, 6 Oct 2025 15:00:00 +0200

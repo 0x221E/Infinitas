@@ -1,0 +1,103 @@
+#include "repl.h"
+#include "parser/nodes/base_node.h"
+#include <expected>
+#include <print>
+
+ReadEvalPrintLoop::ReadEvalPrintLoop()
+{
+    m_Context.m_VM.Register();
+}
+
+void ReadEvalPrintLoop::Run()
+{
+    PrintBanner();
+    Loop();
+}
+
+void ReadEvalPrintLoop::PrintBanner()
+{
+    std::println("============================================================");
+    std::println("Infinitas Programming Language Copyright 2025.");
+    std::println("Visit https://docs.0xinfinity.dev for documentation.");
+    std::println("This project is open-source and community governed.");
+    std::println("Licensed under Apache 2.");
+    std::println("============================================================");
+    std::println("[BEWARE] Right now runtime errors do not reset virtual-machine state during REPL. In rare cases, this could lead to undefined behavior (2.2.5) for operations executed after a runtime error.");
+    std::println("[BEWARE] This behavior will be specified soon and the virtual-machine will return to the last successful state.");
+    std::println("============================================================");
+}
+
+void ReadEvalPrintLoop::Loop()
+{
+    while (m_Running)
+    {
+        std::string input = GetUserInput();
+
+        if (!m_Running)
+        {
+            break;
+        }
+
+        CompileAndRun(input);
+   }
+}
+
+std::string ReadEvalPrintLoop::GetUserInput()
+{
+    std::print(">>> ");
+    std::string input;
+
+    if (!std::getline(std::cin, input))
+    {
+        /** @todo Handle unexpected cases. */
+        m_Running = false;
+    }
+
+    return input;
+}
+
+/** @todo Clean this pipeline more, specifically the interpreter pipeline. */
+void ReadEvalPrintLoop::CompileAndRun(std::string sourceCode)
+{
+    auto tokens = m_Context.m_Lexer.FetchAllTokens(sourceCode)
+    
+    .and_then([this](std::vector<shared::Token> tokens) 
+    {
+              
+        return m_Context.m_Parser.Parse(tokens);
+
+    })
+    .and_then([this](std::vector<parser::ASTNodePtr> nodes)
+    {  
+
+        return m_Context.m_Compiler.Compile(std::move(nodes));
+        
+    })
+    .and_then([this](compiler::CompilerResult result) -> std::expected<void, bool>
+    {
+
+        shared::ConstantPool copy(result.m_Constants);
+        m_Context.m_Compiler.PassConstants(std::move(copy)); /** @todo This is a first sketch, implement a better system to handle constantpool in between REPL runs. */
+
+        vm::VMInterpretProperties interpretProps{std::move(result.m_Instructions), result.m_Constants.MoveConstants()};
+        m_Context.m_VM.Interpret(interpretProps);
+
+        PostInterpretation();
+        return {};
+
+    })
+    .or_else([this](bool) -> std::expected<void, bool>
+    {
+        m_Context.m_Compiler.ResetErrors();
+        return {};
+
+    });
+}
+
+void ReadEvalPrintLoop::PostInterpretation()
+{
+    if (m_Context.m_VM.IsHalted())
+        m_Running = false;
+
+    /** This function will expand. */
+}

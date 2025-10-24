@@ -1,0 +1,13 @@
+Package: infinitas-dbgsym
+Package-Type: ddeb
+Source: infinitas
+Version: 0.0.3-1
+Auto-Built-Package: debug-symbols
+Architecture: amd64
+Maintainer: demir <ozdemir.demir@protonmail.com>
+Installed-Size: 1806
+Depends: infinitas (= 0.0.3-1)
+Section: debug
+Priority: optional
+Description: debug symbols for infinitas
+Build-Ids: e93b3a279560933c6832577ba0be2a262c22ce15

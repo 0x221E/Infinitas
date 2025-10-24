@@ -1,0 +1,5 @@
+infinitas (0.0.3-1) UNRELEASED; urgency=high
+
+  * REPL support added. (Closes: #nnnn)  <nnnn is the bug number of your ITP>
+
+ -- Infinity <25598-infinity@users.noreply.salsa.debian.org>  Thu, 29 Sep 2025 16:00:57 +0200

@@ -1,0 +1,13 @@
+Package: infinitas
+Version: 0.0.3-1
+Architecture: amd64
+Maintainer: demir <ozdemir.demir@protonmail.com>
+Installed-Size: 268
+Depends: libc6 (>= 2.38), libgcc-s1 (>= 3.3.1), libstdc++6 (>= 13.1)
+Section: unknown
+Priority: optional
+Multi-Arch: foreign
+Homepage: <insert the upstream URL, if relevant>
+Description: Easy-to-use cybersecurity-focused interpreted programming language.
+ A new interpreted programming language with native sandboxing features, aimed to ease PoC creation for researchers.
+ Language is completely written in C++, with a security-first philosophy.
