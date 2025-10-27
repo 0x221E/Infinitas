@@ -34,9 +34,7 @@ namespace vm
         m_Instructions.reserve(m_Instructions.capacity() * 2); /** @todo Implement optimization. */
         m_Instructions.insert(m_Instructions.end(), std::make_move_iterator(props.m_Instructions.begin()), std::make_move_iterator(props.m_Instructions.end()));
         m_Constants.ReplaceConstants(std::move(props.m_Constants));
-
         VMLoop();
-
         if(m_IsHalted) return std::unexpected<bool>(true);
         return {};
     }
@@ -53,20 +51,24 @@ namespace vm
         m_ErrorContext.ResetErrors();
     }
 
-    std::unique_ptr<VMSnapshot> VirtualMachine::TakeSnapshot()
+    VMSnapshot VirtualMachine::TakeSnapshot()
     {
-        return std::make_unique<VMSnapshot>(m_Instructions, shared::ConstantPool(m_Constants), m_Environment, m_Stack, m_InstructionPointer);
+        return VMSnapshot(m_Instructions, shared::ConstantPool(m_Constants), m_Environment, m_Stack, m_InstructionPointer);
     }
 
-    void VirtualMachine::RecoverFromSnapshot(const VMSnapshot* snapshot)
+    void VirtualMachine::Recover(const VMSnapshot& snapshot)
     {
         ResetErrors();
-        if(snapshot == nullptr) return;  
-        m_InstructionPointer = snapshot->m_InstructionPointer;
-        m_Instructions = snapshot->m_Instructions;
-        m_Constants = snapshot->m_Constants;
-        m_Environment = snapshot->m_Environment;
-        m_Stack = snapshot->m_Stack;
+        RecoverFromSnapshot(snapshot);
+    } 
+
+    void VirtualMachine::RecoverFromSnapshot(const VMSnapshot& snapshot)
+    {
+        m_InstructionPointer = snapshot.m_InstructionPointer;
+        m_Instructions = snapshot.m_Instructions;
+        m_Constants = snapshot.m_Constants;
+        m_Environment = snapshot.m_Environment;
+        m_Stack = snapshot.m_Stack;
     }
   
     void VirtualMachine::VMLoop()

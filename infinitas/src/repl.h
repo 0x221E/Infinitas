@@ -27,5 +27,5 @@ private:
 private:
     WorkflowContext m_Context;
 
-    std::unique_ptr<vm::VMSnapshot> m_LastWorkingState;
+    vm::VMSnapshot m_LastWorkingState;
 }; 

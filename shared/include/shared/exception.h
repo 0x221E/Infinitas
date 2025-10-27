@@ -6,7 +6,6 @@
 
 namespace shared
 {
-
    enum class ExceptionLocation : std::uint8_t
     {
       EX_TYPE_UNKNOWN = 0,
@@ -53,5 +52,4 @@ namespace shared
     private:
       ExceptionData m_Data; 
     }; 
-    
 }

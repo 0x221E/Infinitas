@@ -15,9 +15,9 @@ namespace vm
     
     void typeConversion::FloatToString(VMContext& context, const shared::Instruction& instruction)
     {
-        ExecutorUtils::AssertStackSizeGreaterEqual(1, "__integer_to_string", context);
-        auto integer = ExecutorUtils::TypeCheck<mp::mpf_float>(context.m_Stack.PopMove(), "__float_to_string", context);
-        std::string result = integer.str();
+        ExecutorUtils::AssertStackSizeGreaterEqual(1, "__float_to_string", context);
+        auto floatingPoint = ExecutorUtils::TypeCheck<mp::mpf_float>(context.m_Stack.PopMove(), "__float_to_string", context);
+        std::string result = floatingPoint.str();
         context.m_Stack.Push(result);
     }
     

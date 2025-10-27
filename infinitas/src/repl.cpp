@@ -3,7 +3,7 @@
 #include "virtual-machine/virtual_machine.h"
 #include <expected>
 
-ReadEvalPrintLoop::ReadEvalPrintLoop() : m_LastWorkingState(new vm::VMSnapshot())
+ReadEvalPrintLoop::ReadEvalPrintLoop()  : m_LastWorkingState()
 {
     m_Context.m_VM.Register();
 }
@@ -60,25 +60,18 @@ void ReadEvalPrintLoop::CompileAndRun(std::string sourceCode)
     
     .and_then([this](std::vector<shared::Token> tokens) 
     {
-              
         return m_Context.m_Parser.Parse(tokens);
-
     })
     .and_then([this](std::vector<parser::ASTNodePtr> nodes)
     {  
-
         return m_Context.m_Compiler.Compile(std::move(nodes));
-        
     })
     .and_then([this](compiler::CompilerResult result) 
     {
-
         shared::ConstantPool copy(result.m_Constants);
         m_Context.m_Compiler.PassConstants(std::move(copy)); /** @todo This is a first sketch, implement a better system to handle constantpool in between REPL runs. */
-
         vm::VMInterpretProperties interpretProps{std::move(result.m_Instructions), result.m_Constants.MoveConstants()};
         return m_Context.m_VM.Interpret(interpretProps);
-
     })
     .and_then([this]() -> std::expected<void, bool>
     {
@@ -87,9 +80,8 @@ void ReadEvalPrintLoop::CompileAndRun(std::string sourceCode)
     })
     .or_else([this](bool) -> std::expected<void, bool>
     {
-        m_Context.m_VM.RecoverFromSnapshot(m_LastWorkingState.get());
+        m_Context.m_VM.Recover(m_LastWorkingState); 
         m_Context.m_Compiler.ResetErrors();
-        LOG_DEBUG("Error hit.");
         return {};
     });
 }

@@ -28,12 +28,22 @@ namespace vm
         shared::ErrorContext<RuntimeException>& m_ErrorContext;
     };
 
+    /**
+     * @brief A props struct for the VirtualMachine::Interpret function.
+     * * Implemented so that the Interpret function is more clear.
+     */
     struct VMInterpretProperties
     {
-        std::vector<shared::Instruction>&& m_Instructions;
-        std::vector<Types>&& m_Constants;
+        std::vector<shared::Instruction> m_Instructions;
+        std::vector<Types> m_Constants;
     };
-
+    
+    /**
+     * @brief Used to keep track of a state of the virtual machine.
+     * * Copies made through this construct can be loaded to an instance of VirtualMachine at any time.
+     *
+     * @warning Instead of copying the entire VirtualMachine, this construct should be used!
+     */ 
     struct VMSnapshot
     {
         std::vector<shared::Instruction> m_Instructions;
@@ -55,8 +65,9 @@ namespace vm
         bool IsHalted() const noexcept;
         void ResetErrors() noexcept;
         
-        std::unique_ptr<VMSnapshot> TakeSnapshot();
-        void RecoverFromSnapshot(const VMSnapshot* snapshot);
+        VMSnapshot TakeSnapshot();
+        void Recover(const VMSnapshot& snapshot);
+        void RecoverFromSnapshot(const VMSnapshot& snapshot);
 
     private:
         std::vector<shared::Instruction> m_Instructions;

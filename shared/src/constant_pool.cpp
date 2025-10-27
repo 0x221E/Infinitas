@@ -1,12 +1,11 @@
 #include "shared/constant_pool.h"
-#include <type_traits>
 #include <utility>
 #include "shared/object_visitors.h"
 
 namespace shared
 {
 
-    ConstantPool::ConstantPool(std::vector<Types> &&constantPool)
+    ConstantPool::ConstantPool(std::vector<Types>&& constantPool)
         : m_Storage(std::move(constantPool))
     {
     }

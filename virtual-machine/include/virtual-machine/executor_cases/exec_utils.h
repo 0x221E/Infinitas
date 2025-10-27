@@ -27,7 +27,7 @@ namespace vm
                 return *value;
             }
             
-            context.m_ErrorContext.LogCritical(RuntimeExceptionCodes::EX_NATIVE_PARAMETER_INVALID, function_name + ": argument mismatch. Check specifications.");
+            context.m_ErrorContext.LogCritical(RuntimeExceptionCodes::EX_NATIVE_PARAMETER_INVALID, function_name + ": argument type mismatch. Check specifications.");
             throw;
         }
     };   

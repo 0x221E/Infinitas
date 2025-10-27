@@ -9,7 +9,7 @@ namespace parser
     FunctionCallNode::FunctionCallNode(std::string name, std::vector<ASTNodePtr> arguments, bool isNative)
         : m_Name(name), m_Arguments(std::move(arguments)), m_IsNative(isNative)
     {
-      LOG_DEBUG("Function call called.");
+
     }
 
     void FunctionCallNode::Compile(compiler::CompilerContext &context)

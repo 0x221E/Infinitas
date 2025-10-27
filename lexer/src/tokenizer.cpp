@@ -158,7 +158,7 @@ namespace lexer
           return FetchNativeType();
         }
         
-        m_ErrorContext.LogCritical(LexerExceptionCodes::EX_LEX_CHAR_MISPLACED, "'_' is misplaced.");
+        m_ErrorContext.LogError(LexerExceptionCodes::EX_LEX_CHAR_MISPLACED, "'_' is misplaced.");
         return std::unexpected<LexerErrorReturn>(true);
     }
 
@@ -305,7 +305,7 @@ namespace lexer
             return shared::Token{shared::TokenType::TOKEN_RIGHT_BRACE, std::string(1, currentCharacter)};
         default:
             Advance();
-            m_ErrorContext.LogCritical(LexerExceptionCodes::EX_LEX_CHAR_UNKNOWN, "Unknown character.");
+            m_ErrorContext.LogError(LexerExceptionCodes::EX_LEX_CHAR_UNKNOWN, "Unknown character.");
             return std::unexpected<LexerErrorReturn>(true);
         }
     }
