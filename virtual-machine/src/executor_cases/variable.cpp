@@ -1,5 +1,7 @@
 #include "virtual-machine/executor_cases/variable.h"
 
+#include <shared/object_visitors.h>
+
 namespace vm
 {
     void VariableCases::DeclareVariable(VMContext &context, const shared::Instruction& instruction)
@@ -18,19 +20,6 @@ namespace vm
     {
         auto &object = context.m_Environment.UnqualifiedLookup(instruction.m_Value, instruction.m_Value2);
 
-        context.m_Stack.Push(std::visit([](auto&& obj) -> Types
-        {
-            using types = std::remove_reference_t<decltype(obj)>;
-
-            if constexpr(std::is_same_v<types, ObjectPtr>)
-            {
-                return obj->Clone();
-            }
-            else
-            {
-                return obj;
-            }
-
-        }, object));
+        context.m_Stack.Push(std::visit(shared::CopyObject{}, object));
     }
 }
