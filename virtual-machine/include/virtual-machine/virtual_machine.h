@@ -12,6 +12,7 @@
 #include "virtual-machine/exception_runtime.h"
 #include "environment.h"
 #include <vector>
+#include <expected>
 
 #include <shared/instruction_container.h>
 #include <shared/constant_pool.h>
@@ -27,30 +28,54 @@ namespace vm
         shared::ErrorContext<RuntimeException>& m_ErrorContext;
     };
 
+    /**
+     * @brief A props struct for the VirtualMachine::Interpret function.
+     * * Implemented so that the Interpret function is more clear.
+     */
     struct VMInterpretProperties
     {
-        std::vector<shared::Instruction>&& m_Instructions;
-        std::vector<Types>&& m_Constants;
+        std::vector<shared::Instruction> m_Instructions;
+        std::vector<Types> m_Constants;
+    };
+    
+    /**
+     * @brief Used to keep track of a state of the virtual machine.
+     * * Copies made through this construct can be loaded to an instance of VirtualMachine at any time.
+     *
+     * @warning Instead of copying the entire VirtualMachine, this construct should be used!
+     */ 
+    struct VMSnapshot
+    {
+        std::vector<shared::Instruction> m_Instructions;
+        shared::ConstantPool m_Constants;
+        Environment m_Environment;
+        StackContainer m_Stack;
+        size_t m_InstructionPointer;
     };
 
     class VirtualMachine
     {
     public:
         VirtualMachine();
-    
+
     public:
         void Register();
-        void Interpret(VMInterpretProperties& props);
+        std::expected<void, bool> Interpret(VMInterpretProperties& props);
         void Dispatch(const shared::Instruction& instruction);
         bool IsHalted() const noexcept;
+        void ResetErrors() noexcept;
+        
+        VMSnapshot TakeSnapshot();
+        void Recover(const VMSnapshot& snapshot);
+        void RecoverFromSnapshot(const VMSnapshot& snapshot);
 
     private:
         std::vector<shared::Instruction> m_Instructions;
         ExecutionDispatcher m_ExecutionDispatcher;
-        Environment m_Environment;
         shared::ConstantPool m_Constants;
-        StackContainer m_Stack;
         size_t m_InstructionPointer;
+        Environment m_Environment;
+        StackContainer m_Stack;
 
         shared::ErrorContext<RuntimeException> m_ErrorContext;
         VMContext m_VMContext;

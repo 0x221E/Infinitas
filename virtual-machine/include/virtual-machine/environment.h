@@ -1,7 +1,6 @@
 #pragma once
 
 #include <vector>
-#include <unordered_map>
 
 #include <shared/useful.h>
 
@@ -18,7 +17,13 @@ namespace vm
     {
     public:
         Environment();
-    
+
+        Environment(const Environment& other);
+        Environment& operator=(const Environment& other);
+
+        Environment(Environment&& other) = delete;
+        Environment& operator=(Environment&& other) = delete;
+
     public:
         void AddScope();
         void RemoveScope();
@@ -29,5 +34,8 @@ namespace vm
 
     public:
         std::vector<StackValues> m_Environments;
+
+    private:
+        std::vector<StackValues> CloneStorage() const;
     };
 }

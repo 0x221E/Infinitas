@@ -73,7 +73,7 @@ namespace parser
             return;
         }
 
-        m_ErrorContext.LogCritical(errorCode, errorMessage);
+        m_ErrorContext.LogError(errorCode, errorMessage);
     }
 
     shared::Token Parser::Consume(shared::TokenType expectedToken, SyntaxExceptionCodes errorCode, std::string errorMessage)
@@ -83,7 +83,7 @@ namespace parser
             return Advance();
         }
 
-        m_ErrorContext.LogCritical(errorCode, errorMessage);
+        m_ErrorContext.LogError(errorCode, errorMessage);
         return shared::Token();
     }
 
@@ -134,8 +134,8 @@ namespace parser
             return std::make_unique<GroupingExpression>(std::move(expression));
         }
 
-        m_ErrorContext.LogCritical(SyntaxExceptionCodes::EX_SYNTAX_UNKNOWN, 
-                                     "Parser ran out of path.");
+        m_ErrorContext.LogError(SyntaxExceptionCodes::EX_SYNTAX_UNKNOWN, 
+                                     "Expression was expected.");
         return std::make_unique<ErrorNode>();
     }
 
@@ -206,7 +206,7 @@ namespace parser
     ASTNodePtr Parser::ExpressionStatement()
     {
         ASTNodePtr expression = Expression();
-        Expect(shared::TokenType::TOKEN_STATEMENT_END, SyntaxExceptionCodes::EX_SYNTAX_MISSING_SEMICOLON, "Semicolon (;) is required to end expressions.");
+        Expect(shared::TokenType::TOKEN_STATEMENT_END, SyntaxExceptionCodes::EX_SYNTAX_MISSING_SEMICOLON, "Semicolon (;) is required to end statements.");
         return expression; 
     }
 
@@ -227,7 +227,7 @@ namespace parser
 
     ASTNodePtr Parser::FunctionCall(std::string name, bool isNative)
     {
-        Expect(shared::TokenType::TOKEN_LEFT_PARENTHESIS, SyntaxExceptionCodes::EX_SYNTAX_MISSING_LEFTPAREN, "Function call expected an opening paranthesis '('.");
+        Expect(shared::TokenType::TOKEN_LEFT_PARENTHESIS, SyntaxExceptionCodes::EX_SYNTAX_MISSING_LEFTPAREN, "Function call to '" + name + "' expected an opening paranthesis '('.");
 
         std::vector<ASTNodePtr> arguments;
         arguments.reserve(2); /** @todo An average of native function call arguments. */
@@ -242,7 +242,7 @@ namespace parser
           }
         }
         
-        Expect(shared::TokenType::TOKEN_RIGHT_PARENTHESIS, SyntaxExceptionCodes::EX_SYNTAX_MISSING_RIGHTPAREN, "You must enclose the function arguments with a closing paranthesis ')'.");
+        Expect(shared::TokenType::TOKEN_RIGHT_PARENTHESIS, SyntaxExceptionCodes::EX_SYNTAX_MISSING_RIGHTPAREN, "Function call to '" + name + "' expected a closing paranthesis ')'.");
         return std::make_unique<FunctionCallNode>(name, std::move(arguments), isNative); 
     }
 

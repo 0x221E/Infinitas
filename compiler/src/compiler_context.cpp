@@ -18,6 +18,7 @@ namespace compiler
         {"integer_div", shared::Opcodes::OP_NATIVE_INT_DIV},
         {"float_div", shared::Opcodes::OP_NATIVE_FLOAT_DIV},
         {"integer_to_string", shared::Opcodes::OP_NATIVE_INT_TO_STR},
+        {"float_to_string", shared::Opcodes::OP_NATIVE_FLOAT_TO_STR},
         {"negate_integer", shared::Opcodes::OP_NATIVE_UNARY_NEGATE_INT},
         {"negate_float", shared::Opcodes::OP_NATIVE_UNARY_NEGATE_FLOAT},
         {"integer_to_string", shared::Opcodes::OP_NATIVE_INT_TO_STR}

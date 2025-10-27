@@ -2,7 +2,7 @@
 
 namespace shared
 {
-  Exception::Exception(ExceptionLocation location, ExceptionSeverity severity, std::uint64_t code, std::string message) : m_Data(location, severity, code, message)
+  Exception::Exception(ExceptionLocation location, ExceptionSeverity severity, std::uint64_t code, std::string message) : m_Data(location, severity, code, message), std::runtime_error(message)
   {
         
   }

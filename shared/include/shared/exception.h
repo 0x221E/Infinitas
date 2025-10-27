@@ -2,10 +2,10 @@
 
 #include <cstdint>
 #include <string>
+#include <stdexcept>
 
 namespace shared
 {
-
    enum class ExceptionLocation : std::uint8_t
     {
       EX_TYPE_UNKNOWN = 0,
@@ -33,7 +33,7 @@ namespace shared
       std::string m_Message;
     };
 
-    class Exception 
+    class Exception : public std::runtime_error 
     { 
     public:
       Exception() = delete;
@@ -52,5 +52,4 @@ namespace shared
     private:
       ExceptionData m_Data; 
     }; 
-    
 }

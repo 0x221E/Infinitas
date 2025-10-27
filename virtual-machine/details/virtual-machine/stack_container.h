@@ -13,7 +13,6 @@
 #pragma once
 
 #include <vector>
-#include <cstdint>
 
 #include <shared/logger.h>
 #include <shared/constant_pool.h>
@@ -27,7 +26,14 @@ namespace vm
     {
     public:
         StackContainer(std::size_t capacity = 30);
+        StackContainer(const StackContainer& other);
 
+        StackContainer& operator=(const StackContainer& other);
+
+        StackContainer& operator=(StackContainer&& other) = delete;
+        StackContainer(StackContainer&& other) = delete;
+
+    public:
         /**
          * @brief Pushes the value onto the stack by moving the argument. 
          * @param ObjectPtr&& Object pointer to be pushed.
@@ -58,7 +64,6 @@ namespace vm
          */
         [[nodiscard]] Types PopMove();
 
-
         /**
          * @brief Retrieves the size counter.
          */
@@ -67,6 +72,9 @@ namespace vm
     private:
         std::vector<Types> m_Storage;
         std::size_t m_Size;
+
+    private:
+        std::vector<Types> CloneStorage() const;
     };
 
 }

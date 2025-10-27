@@ -9,15 +9,12 @@
 class ReadEvalPrintLoop
 {
 public:
-    /** Constructor/Deconstructor */
     ReadEvalPrintLoop();
 
 public:
-    /** Public Functions */
     void Run();
 
 private:
-    /** Private Functions and Internal Implementations */
     void PrintBanner();
     void Loop();
     std::string GetUserInput();
@@ -25,10 +22,10 @@ private:
     void PostInterpretation();
 
 private:
-    /** Temporary/State Variables */
     bool m_Running = true;
 
 private:
-    /** Workflow */
     WorkflowContext m_Context;
+
+    vm::VMSnapshot m_LastWorkingState;
 }; 

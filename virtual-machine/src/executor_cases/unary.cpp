@@ -6,37 +6,21 @@ namespace vm
 {
     void UnaryCases::NegateInteger(VMContext &context, const shared::Instruction& instruction)
     {
-        if (context.m_Stack.Size() < 1)
-        {
-            context.m_ErrorContext.LogCritical(RuntimeExceptionCodes::EX_RUNTIME_STACK_INVALID, "Negation operation requires the stack to have at least 1 element. Negation cannot be attempted not on a object.");
-        }
+        ExecutorUtils::AssertStackSizeGreaterEqual(1, "__negate_integer", context);
 
-        auto value = TypeCheck<mp::mpz_int>(context.m_Stack.PopMove());
+        auto value = ExecutorUtils::TypeCheck<mp::mpz_int>(context.m_Stack.PopMove(), __func__, context);
     
-        if(!value)
-        {
-            context.m_ErrorContext.LogCritical(RuntimeExceptionCodes::EX_RUNTIME_STACK_INVALID, "__negate_integer function requires type ___integer as argument!");
-        }
-              
-        mp::mpz_int result = value.value() * -1;
+        mp::mpz_int result = value * -1;
         context.m_Stack.Push(result);
     }
 
     void UnaryCases::NegateFloat(VMContext &context, const shared::Instruction& instruction)
     {
-        if (context.m_Stack.Size() < 1)
-        {
-            context.m_ErrorContext.LogCritical(RuntimeExceptionCodes::EX_RUNTIME_STACK_INVALID, "Negation operation requires the stack to have at least 1 element. Negation cannot be attempted not on a object.");
-        }
-
-        auto value = TypeCheck<mp::mpf_float>(context.m_Stack.ReferenceBack());
-    
-        if(!value)
-        {
-            context.m_ErrorContext.LogCritical(RuntimeExceptionCodes::EX_RUNTIME_STACK_INVALID, "__negate_float function requires type ___float as argument!");
-        }
+        ExecutorUtils::AssertStackSizeGreaterEqual(1, "__negate_float", context);
         
-        mp::mpf_float result = value.value() * -1;
+        auto value = ExecutorUtils::TypeCheck<mp::mpf_float>(context.m_Stack.ReferenceBack(), __func__, context);
+    
+        mp::mpf_float result = value * -1;
         context.m_Stack.Push(result);
     }
 }

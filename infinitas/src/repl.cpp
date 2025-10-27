@@ -1,9 +1,9 @@
 #include "repl.h"
 #include "parser/nodes/base_node.h"
+#include "virtual-machine/virtual_machine.h"
 #include <expected>
-#include <print>
 
-ReadEvalPrintLoop::ReadEvalPrintLoop()
+ReadEvalPrintLoop::ReadEvalPrintLoop()  : m_LastWorkingState()
 {
     m_Context.m_VM.Register();
 }
@@ -21,9 +21,6 @@ void ReadEvalPrintLoop::PrintBanner()
     std::cout << "Visit https://docs.0xinfinity.dev for documentation." << std::endl;
     std::cout << "This project is open-source and community governed." << std::endl;
     std::cout << "Licensed under Apache 2." << std::endl;
-    std::cout << "============================================================" << std::endl;
-    std::cout << "[BEWARE] Right now runtime errors do not reset virtual-machine state during REPL. In rare cases, this could lead to undefined behavior (2.2.5) for operations executed after a runtime error." << std::endl;
-    std::cout << "[BEWARE] This behavior will be specified soon and the virtual-machine will return to the last successful state." << std::endl;
     std::cout << "============================================================" << std::endl;
 }
 
@@ -63,41 +60,28 @@ void ReadEvalPrintLoop::CompileAndRun(std::string sourceCode)
     
     .and_then([this](std::vector<shared::Token> tokens) 
     {
-              
         return m_Context.m_Parser.Parse(tokens);
-
     })
     .and_then([this](std::vector<parser::ASTNodePtr> nodes)
     {  
-
         return m_Context.m_Compiler.Compile(std::move(nodes));
-        
     })
-    .and_then([this](compiler::CompilerResult result) -> std::expected<void, bool>
+    .and_then([this](compiler::CompilerResult result) 
     {
-
         shared::ConstantPool copy(result.m_Constants);
         m_Context.m_Compiler.PassConstants(std::move(copy)); /** @todo This is a first sketch, implement a better system to handle constantpool in between REPL runs. */
-
         vm::VMInterpretProperties interpretProps{std::move(result.m_Instructions), result.m_Constants.MoveConstants()};
-        m_Context.m_VM.Interpret(interpretProps);
-
-        PostInterpretation();
+        return m_Context.m_VM.Interpret(interpretProps);
+    })
+    .and_then([this]() -> std::expected<void, bool>
+    {
+        m_LastWorkingState = m_Context.m_VM.TakeSnapshot();
         return {};
-
     })
     .or_else([this](bool) -> std::expected<void, bool>
     {
+        m_Context.m_VM.Recover(m_LastWorkingState); 
         m_Context.m_Compiler.ResetErrors();
         return {};
-
     });
-}
-
-void ReadEvalPrintLoop::PostInterpretation()
-{
-    if (m_Context.m_VM.IsHalted())
-        m_Running = false;
-
-    /** This function will expand. */
 }

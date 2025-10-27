@@ -23,18 +23,24 @@ namespace compiler
 
     std::expected<CompilerResult, bool> Compiler::Compile(std::vector<std::unique_ptr<parser::ASTNode>> &&tree)
     {
-        for (auto &statement : tree)
+        try
         {
-            statement->Compile(m_Context);
+            for (auto &statement : tree)
+            {
+                statement->Compile(m_Context);
+            }
         }
-
+        catch(const CompilerException& err)
+        {
+            return std::unexpected(true); 
+        }
+        
         if(m_Context.ErrorThrown())
         {
           return std::unexpected(true);
         }
 
         CompilerResult result = m_Context.GetResult();
-         
         return result;
     }
 }
