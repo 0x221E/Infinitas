@@ -1,5 +1,5 @@
 #include "virtual-machine/stack_container.h"
-#include <type_traits>
+#include <shared/object_visitors.h>
 
 namespace vm
 {
@@ -7,6 +7,20 @@ namespace vm
     StackContainer::StackContainer(std::size_t capacity) :  m_Size(0)
     {
         m_Storage.reserve(capacity); /** @todo Add optimization. */
+    }
+
+    StackContainer::StackContainer(const StackContainer& other) : m_Storage(other.CloneStorage()), m_Size(other.m_Size)
+    {
+        
+    }
+    
+    StackContainer& StackContainer::operator=(const StackContainer& other)
+    {
+        if(this == &other) return *this;
+        m_Size = other.m_Size; 
+        std::vector<Types> temp = other.CloneStorage();
+        m_Storage.swap(temp);  
+        return *this;
     }
 
     void StackContainer::Push(Types&& element)
@@ -35,7 +49,6 @@ namespace vm
         if(m_Size <= 0){
             throw std::runtime_error("[STACK] Stack size cannot be smaller than 0. Cannot Back().");
         }
-
         return m_Storage.at(m_Size - 1);
     }
 
@@ -44,7 +57,6 @@ namespace vm
         if(m_Size <= 0){
             throw std::runtime_error("[STACK] Stack size cannot be smaller than 0. Cannot pop.");
         }
-
         m_Size--;
     }
     
@@ -53,31 +65,24 @@ namespace vm
         if(m_Size <= 0){
             throw std::runtime_error("[STACK] Stack size cannot be smaller than 0. Cannot pop.");
         }
-
-        auto result = std::visit([](auto&& obj) -> Types 
-        {
-            using type = std::remove_cvref_t<decltype(obj)>;
-
-            if constexpr (std::same_as<type, ObjectPtr>)
-            {
-                return std::move(obj); 
-            }
-            else 
-            {
-                return obj;
-            }
-          
-        }, m_Storage.at(m_Size - 1)); 
-        
-        
         m_Size--;
-
-        return result;
+        return std::move(m_Storage.at(m_Size));
     }
 
     std::size_t StackContainer::Size() const
     {
         return m_Size;
+    }
+
+    std::vector<Types> StackContainer::CloneStorage() const
+    {
+        std::vector<Types> temp;
+        temp.reserve(m_Storage.size());
+        for(const auto& elem : m_Storage)
+        {
+            temp.emplace_back(std::visit(shared::CopyObject{}, elem));
+        }
+        return temp;
     }
 
 }

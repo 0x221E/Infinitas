@@ -27,7 +27,9 @@ namespace vm
     dispatcher.Register(shared::Opcodes::OP_LOAD_CONSTANT, &NativeCases::LoadConstant); \
     dispatcher.Register(shared::Opcodes::OP_NATIVE_PRINT, &NativeCases::Print); \
     dispatcher.Register(shared::Opcodes::OP_NATIVE_EXIT, &NativeCases::Exit); \
-    dispatcher.Register(shared::Opcodes::OP_NATIVE_INT_TO_STR, &NativeCases::IntegerToString); \
+        \
+    dispatcher.Register(shared::Opcodes::OP_NATIVE_INT_TO_STR, &typeConversion::IntegerToString); \
+    dispatcher.Register(shared::Opcodes::OP_NATIVE_FLOAT_TO_STR, &typeConversion::FloatToString); \
         \
     dispatcher.Register(shared::Opcodes::OP_NATIVE_UNARY_NEGATE_INT, &UnaryCases::NegateInteger); \
     dispatcher.Register(shared::Opcodes::OP_NATIVE_UNARY_NEGATE_FLOAT, &UnaryCases::NegateFloat); \

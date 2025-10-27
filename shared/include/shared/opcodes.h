@@ -14,7 +14,7 @@
 
 namespace shared
 {
-    enum Opcodes : uint8_t
+    enum Opcodes : std::uint8_t
     {
         OP_LOAD_CONSTANT = 0x01,
         OP_DECLARE_VARIABLE = 0x02,
@@ -37,9 +37,10 @@ namespace shared
         OP_NATIVE_INT_DIV = 0x19,
         OP_NATIVE_FLOAT_DIV = 0x20,
         OP_NATIVE_INT_TO_STR = 0x21,
-        OP_NATIVE_UNARY_NEGATE_INT = 0x22,
-        OP_NATIVE_UNARY_NEGATE_FLOAT = 0x23,
-        OP_BLOCK_START = 0x24,
-        OP_BLOCK_END = 0x25,
+        OP_NATIVE_FLOAT_TO_STR = 0x22,
+        OP_NATIVE_UNARY_NEGATE_INT = 0x23,
+        OP_NATIVE_UNARY_NEGATE_FLOAT = 0x24,
+        OP_BLOCK_START = 0x25,
+        OP_BLOCK_END = 0x26,
     };
 }

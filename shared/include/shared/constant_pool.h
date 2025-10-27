@@ -16,6 +16,7 @@ namespace shared{
         ConstantPool(ConstantPool&& constantPool);
         
         ConstantPool& operator=(ConstantPool&& other);
+        ConstantPool& operator=(const ConstantPool& other);
 
         void InsertConstant(Types&& constant);
         Types GetConstant(std::size_t index);
@@ -28,6 +29,9 @@ namespace shared{
 
     private:
         std::vector<Types> m_Storage;        
+
+    private:
+        std::vector<Types> CloneStorage() const;
     };
 
 }

@@ -2,6 +2,7 @@
 
 #include <cstdint>
 #include <string>
+#include <stdexcept>
 
 namespace shared
 {
@@ -33,7 +34,7 @@ namespace shared
       std::string m_Message;
     };
 
-    class Exception 
+    class Exception : public std::runtime_error 
     { 
     public:
       Exception() = delete;

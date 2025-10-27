@@ -1,5 +1,7 @@
 #include "shared/constant_pool.h"
 #include <type_traits>
+#include <utility>
+#include "shared/object_visitors.h"
 
 namespace shared
 {
@@ -9,28 +11,8 @@ namespace shared
     {
     }
 
-    ConstantPool::ConstantPool(const ConstantPool& constantPool)
+    ConstantPool::ConstantPool(const ConstantPool& other) : m_Storage(other.CloneStorage())
     {
-        m_Storage.reserve(constantPool.m_Storage.size());
-
-        for (const auto& object : constantPool.m_Storage)
-        {
-            auto result = std::visit([](auto&& obj) ->Types
-            {
-                using type = std::remove_cvref_t<decltype(obj)>;
-
-                if constexpr (std::is_same_v<type, ObjectPtr>)
-                {
-                    return obj->Clone();
-                }
-                else
-                {
-                    return obj;        
-                }
-            }, object);
-
-            m_Storage.emplace_back(std::move(result));
-        }
     }
 
     ConstantPool::ConstantPool(ConstantPool &&constantPool)
@@ -42,16 +24,18 @@ namespace shared
     {
     }
 
-    /**
-     * @todo Is moving the right approach here?
-     */
     ConstantPool &ConstantPool::operator=(ConstantPool &&other)
     {
-        if (this != &other)
-        {
-            m_Storage = std::move(other.m_Storage);
-        }
-        
+        if (this == &other) return *this;
+        m_Storage = std::move(other.m_Storage);
+        return *this;
+    }
+
+    ConstantPool &ConstantPool::operator=(const ConstantPool& other)
+    {
+        if (this == &other) return *this;
+        std::vector<Types> temp = other.CloneStorage();
+        m_Storage.swap(temp);
         return *this;
     }
 
@@ -62,19 +46,7 @@ namespace shared
             throw std::runtime_error("[Constant Pool] Get() Failed: Index out of bounds.");
         }
 
-        return std::visit([](auto&& obj) -> Types
-          {
-              using type = std::remove_reference_t<decltype(obj)>;
-
-              if constexpr (std::is_same_v<type, ObjectPtr>)
-              {
-                  return obj->Clone();
-              }
-              else 
-              {
-                  return obj;
-              }
-          }, m_Storage[index]);
+        return std::visit(CopyObject{}, m_Storage[index]);
     }
 
     [[nodiscard]] std::vector<Types> ConstantPool::MoveConstants() noexcept
@@ -101,5 +73,16 @@ namespace shared
     void ConstantPool::ReplaceConstants(std::vector<Types> &&constants)
     {
         m_Storage = std::move(constants);
+    }
+
+    std::vector<Types> ConstantPool::CloneStorage() const
+    {
+        std::vector<Types> temp;
+        temp.reserve(m_Storage.size());
+        for(const auto& elem : m_Storage)
+        {
+            temp.emplace_back(std::visit(CopyObject{}, elem));
+        }
+        return temp;    
     }
 }

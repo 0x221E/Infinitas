@@ -11,20 +11,32 @@ namespace shared
   struct ErrorContext
   {
       bool m_ErrorThrown = false;
-
-      template<typename...ARGS>
-      void LogError(ARGS...args)
+      
+      void LogError(CodeType code, std::string message)
       {
-          static_assert(std::is_constructible_v<ExceptionType, ARGS...>, "Exception cannot be constructed with the supplied arguments");
-          ExceptionType ex(std::forward<ARGS>(args)...);
-          std::cerr << ex.ToString() << std::endl;
+          Log(shared::ExceptionSeverity::EX_SEVERITY_ERROR, code, message);
+          m_ErrorThrown = true;
       }
     
       void LogCritical(CodeType code, std::string message)
       {
-          LogError(shared::ExceptionSeverity::EX_SEVERITY_EXEC_STOP, code, message);
+          Log(shared::ExceptionSeverity::EX_SEVERITY_EXEC_STOP, code, message);
           m_ErrorThrown = true;
       }
+      
+      void ResetErrors() noexcept
+      {
+          m_ErrorThrown = false;
+      }
 
+  private:
+      template<typename...ARGS>
+      void Log(ARGS...args)
+      {
+          static_assert(std::is_constructible_v<ExceptionType, ARGS...>, "Exception cannot be constructed with the supplied arguments");
+          ExceptionType ex(std::forward<ARGS>(args)...);
+          std::cerr << ex.ToString() << std::endl;
+          if (ex.GetSeverity() == shared::ExceptionSeverity::EX_SEVERITY_EXEC_STOP) throw ex;
+      }
   };
 }

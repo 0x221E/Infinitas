@@ -8,7 +8,8 @@ namespace vm
   {
     EX_RUNTIME_UNKNOWN = 0,
     EX_RUNTIME_STACK_INVALID = 1,
-    EX_ARITHMETIC_ZERODIVISION = 2
+    EX_NATIVE_PARAMETER_INVALID = 2,
+    EX_ARITHMETIC_ZERODIVISION = 3,
   };
 
   class RuntimeException : public shared::Exception

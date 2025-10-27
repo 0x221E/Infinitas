@@ -12,6 +12,7 @@
 #include "virtual-machine/exception_runtime.h"
 #include "environment.h"
 #include <vector>
+#include <expected>
 
 #include <shared/instruction_container.h>
 #include <shared/constant_pool.h>
@@ -33,24 +34,37 @@ namespace vm
         std::vector<Types>&& m_Constants;
     };
 
+    struct VMSnapshot
+    {
+        std::vector<shared::Instruction> m_Instructions;
+        shared::ConstantPool m_Constants;
+        Environment m_Environment;
+        StackContainer m_Stack;
+        size_t m_InstructionPointer;
+    };
+
     class VirtualMachine
     {
     public:
         VirtualMachine();
-    
+
     public:
         void Register();
-        void Interpret(VMInterpretProperties& props);
+        std::expected<void, bool> Interpret(VMInterpretProperties& props);
         void Dispatch(const shared::Instruction& instruction);
         bool IsHalted() const noexcept;
+        void ResetErrors() noexcept;
+        
+        std::unique_ptr<VMSnapshot> TakeSnapshot();
+        void RecoverFromSnapshot(const VMSnapshot* snapshot);
 
     private:
         std::vector<shared::Instruction> m_Instructions;
         ExecutionDispatcher m_ExecutionDispatcher;
-        Environment m_Environment;
         shared::ConstantPool m_Constants;
-        StackContainer m_Stack;
         size_t m_InstructionPointer;
+        Environment m_Environment;
+        StackContainer m_Stack;
 
         shared::ErrorContext<RuntimeException> m_ErrorContext;
         VMContext m_VMContext;
