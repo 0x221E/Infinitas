@@ -20,7 +20,6 @@ cmake .. && cmake --build
 Currently there are numerous architectural shortcomings. Known architectural issues include: 
 - Inefficient and architecturally sub-optimal use of std::unordered_map in Compiler for native function search.
 - Inefficient and architecturally sub-optimal executor case dispatching system in virtual-machine.
-- These are being tracked and will be resolved by enforcing rules defined in sections **4.3.1.\*** and **4.3.3.\***.
 ## Information and Requirements
 - **Language Standard**: C++23 or later
 - **Compiler**: Tested on g++14
@@ -34,8 +33,6 @@ This is to enforce:
 > Minor organizations, security patches, and bug fixes that are aimed to enforce the current behavior inside specification do not require changes inside the specification.
 > You can access specification from this link: [https://infinitas-spec.atlassian.net/wiki](https://infinitas-spec.atlassian.net/wiki).
 ## Specification Features Under Implementation
-- **4.3.1.\* & 4.3.3.\*** - Removing tight coupling of arithmetic operation and string concatenation
-- **4.3.2.\*** - Primitive type conversions
 - **4.3.5.1** - Primitive exit function errorCode parameter
 - **2.2.11** - No-Heap Mode // planned for December.
 - Standard Library
@@ -43,19 +40,11 @@ This is to enforce:
     - "\_\_" for functions (e.g., `__print`),
     - "\_\_\_" for types (e.g., `__int`)
     - User-defined functions and types cannot use these prefixes.
-## Currently available native functions
-- `__integer_add(___integer, ___integer)`
-- `__integer_sub(___integer, ___integer)`
-- `__integer_mul(___integer, ___integer)`
-- `__integer_div(___integer, ___integer)`
-- `__float_add(___float, ___float)`
-- `__float_sub(___float, ___float)`
-- `__float_mul(___float, ___float)`
-- `__float_div(___float, ___float)`
-- `__integer_to_string(___integer)`
-- `__integer_negate(__integer)`
-- `__float_negate(__float)`
-
+## Currently available specified features
+- All primitive type conversions.
+- Primitive type arithmetic through primitive arithmetic functions (Operators +-*/ is not allowed as of yet since overloading does not exist).
+- \_\_print() function that takes a \_\_\_string as an argument.
+- \_\_exit() function without an exit code (argument specified; yet to be implemented).
 These functions will be used in the Standard Library (STL) that is being actively developed, operations similar to arithmetic will go through the overloading process.
 ## Planned Cybersecurity Features
 - Sandboxing user code and native files through:
