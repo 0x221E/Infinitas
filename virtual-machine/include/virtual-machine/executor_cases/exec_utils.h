@@ -12,8 +12,8 @@ namespace vm
     class ExecutorUtils
     {
     public:
-        static void AssertStackSizeNotEqual(std::size_t size, std::string function, VMContext& context);    
-        static void AssertStackSizeGreaterEqual(std::size_t size, std::string function, VMContext& context);    
+        static void AssertStackSizeNotEqual(std::size_t size, const std::string& function, VMContext& context);    
+        static void AssertStackSizeGreaterEqual(std::size_t size, const std::string& function, VMContext& context);    
 
        /**
        * @brief A utility function that checks the type against the supplied template argument.
