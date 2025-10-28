@@ -29,7 +29,11 @@ namespace vm
     dispatcher.Register(shared::Opcodes::OP_NATIVE_EXIT, &NativeCases::Exit); \
         \
     dispatcher.Register(shared::Opcodes::OP_NATIVE_INT_TO_STR, &typeConversion::IntegerToString); \
+    dispatcher.Register(shared::Opcodes::OP_NATIVE_INT_TO_FLOAT, &typeConversion::IntegerToFloat); \
     dispatcher.Register(shared::Opcodes::OP_NATIVE_FLOAT_TO_STR, &typeConversion::FloatToString); \
+    dispatcher.Register(shared::Opcodes::OP_NATIVE_FLOAT_TO_INT, &typeConversion::FloatToInteger); \
+    dispatcher.Register(shared::Opcodes::OP_NATIVE_STR_TO_FLOAT, &typeConversion::StringToFloat); \
+    dispatcher.Register(shared::Opcodes::OP_NATIVE_STR_TO_INT, &typeConversion::StringToInteger); \
         \
     dispatcher.Register(shared::Opcodes::OP_NATIVE_UNARY_NEGATE_INT, &UnaryCases::NegateInteger); \
     dispatcher.Register(shared::Opcodes::OP_NATIVE_UNARY_NEGATE_FLOAT, &UnaryCases::NegateFloat); \
