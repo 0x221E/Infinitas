@@ -10,6 +10,7 @@ namespace vm
         EX_RUNTIME_STACK_INVALID = 1,
         EX_NATIVE_PARAMETER_INVALID = 2,
         EX_ARITHMETIC_ZERODIVISION = 3,
+        EX_RUNTIME_CONVERSION_ERROR = 4
     };
 
     class RuntimeException : public shared::Exception
