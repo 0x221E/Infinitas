@@ -8,5 +8,14 @@ namespace parser
     {
         
     }
+    
+    void ASTNode::SetRuntimeType(NodeRuntimeType type)
+    {
+        m_RuntimeType = type;
+    }
 
+    const NodeRuntimeType ASTNode::GetRuntimeType() const
+    {
+        return m_RuntimeType;
+    }
 }

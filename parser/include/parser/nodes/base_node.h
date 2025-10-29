@@ -32,7 +32,15 @@ namespace parser
         NODE_EXIT = 0x11,
         NODE_BLOCK = 0x12
     };
-
+    
+    enum class NodeRuntimeType : std::uint8_t
+    {
+        UNKNOWN = 0,
+        INTEGER = 1,
+        FLOAT = 2,
+        STRING = 3
+    };
+    
     class ASTNode
     {
     public:
@@ -43,8 +51,13 @@ namespace parser
     public:
         virtual void Compile(compiler::CompilerContext& context) = 0;
     
+    public:
+        void SetRuntimeType(NodeRuntimeType type);
+        const NodeRuntimeType GetRuntimeType() const;
+
     private:
         NodeType m_Type;
+        NodeRuntimeType m_RuntimeType;
     };
 
     using ASTNodePtr = std::unique_ptr<ASTNode>;

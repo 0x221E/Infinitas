@@ -4,13 +4,13 @@
 
 namespace parser
 {
-    DeclareVariableNode::DeclareVariableNode(std::string name, std::unique_ptr<ASTNode> expression)
-        : m_Name(name), m_Expression(std::move(expression))
+    DeclareVariableNode::DeclareVariableNode(std::string name, std::string type, std::unique_ptr<ASTNode> expression)
+        : m_Name(name), m_TypeName(type), m_Expression(std::move(expression))
     {
     }
 
-    DeclareVariableNode::DeclareVariableNode(std::string name)
-        : m_Name(name), m_Expression(nullptr)
+    DeclareVariableNode::DeclareVariableNode(std::string name, std::string type)
+        : m_Name(name), m_TypeName(type), m_Expression(nullptr)
     {
 
     }
@@ -26,9 +26,14 @@ namespace parser
         return m_Expression != nullptr;
     }
 
-    std::string DeclareVariableNode::GetName() const
+    const std::string DeclareVariableNode::GetName() const
     {
         return m_Name;
+    }
+
+    const std::string DeclareVariableNode::GetTypeName() const
+    {
+        return m_TypeName;
     }
 
    ASTNode& DeclareVariableNode::GetExpression() const

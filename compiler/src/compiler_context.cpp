@@ -70,24 +70,28 @@ namespace compiler
     void CompilerContext::CompileIntegerNode(parser::IntegerLiteralNode& node)
     {
         m_Constants.InsertConstant(node.GetValue());
+        node.SetRuntimeType(parser::NodeRuntimeType::INTEGER);
         m_Instructions.emplace_back(shared::Opcodes::OP_LOAD_CONSTANT, m_Constants.Size() - 1);
     }
 
     void CompilerContext::CompileFloatNode(parser::FloatLiteralNode& node)
     {
         m_Constants.InsertConstant(node.GetValue());
+        node.SetRuntimeType(parser::NodeRuntimeType::FLOAT) ;
         m_Instructions.emplace_back(shared::Opcodes::OP_LOAD_CONSTANT, m_Constants.Size() - 1);
     }
 
     void CompilerContext::CompileStringNode(parser::StringLiteralNode& node)
     {
         m_Constants.InsertConstant(node.GetValue());
+        node.SetRuntimeType(parser::NodeRuntimeType::STRING);
         m_Instructions.emplace_back(shared::Opcodes::OP_LOAD_CONSTANT, m_Constants.Size() - 1);
     }
 
     void CompilerContext::CompileUnaryNode(parser::UnaryNode& node)
     {
         node.GetExpression().Compile(*this);
+        node.SetRuntimeType(node.GetExpression().GetRuntimeType());
 
         switch (node.GetOperator())
         {
@@ -106,8 +110,8 @@ namespace compiler
     void CompilerContext::CompileGroupingNode(parser::GroupingExpression &node)
     {
         node.GetExpression().Compile(*this);
+        node.SetRuntimeType(node.GetExpression().GetRuntimeType());
     }
-    
 
     /**
      * @todo Specify this behavior!
@@ -160,7 +164,7 @@ namespace compiler
     {
         if (!node.HasExpression())
         {
-          m_ErrorContext.LogCritical(CompilerExceptionCodes::EX_COMPILER_VAR_IMPROPER,"Variables must be declared with an initially valid value."); 
+            m_ErrorContext.LogCritical(CompilerExceptionCodes::EX_COMPILER_VAR_IMPROPER,"Variables must be declared with an initially valid value."); 
         }
 
         node.GetExpression().Compile(*this);
@@ -192,7 +196,7 @@ namespace compiler
             return;
         }
 
-        node.GetExpression().Compile(*this);
+        node.GetExpression().Compile(*this); 
 
         m_Instructions.emplace_back(shared::Opcodes::OP_ASSIGN_VARIABLE, result.value().m_VariableIndex, result.value().m_ScopeOffset);
     }

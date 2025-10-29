@@ -263,6 +263,7 @@ namespace parser
     ASTNodePtr Parser::VarDeclaration()
     {
         shared::Token identifier = Consume(shared::TokenType::TOKEN_IDENTIFIER, SyntaxExceptionCodes::EX_SYNTAX_MISSING_IDENTIFIER, "Variable declarations requires an identifier!");
+        shared::Token type = Previous();
             
         ASTNodePtr expression = nullptr;
         if(Match(shared::TokenType::TOKEN_EQUAL)){
@@ -270,7 +271,7 @@ namespace parser
         }
             
         Expect(shared::TokenType::TOKEN_STATEMENT_END, SyntaxExceptionCodes::EX_SYNTAX_MISSING_SEMICOLON, "Varible declarations must end with a semicolon (;).");
-        if(expression != nullptr) return std::make_unique<DeclareVariableNode>(identifier.lexeme, std::move(expression));
+        if(expression != nullptr) return std::make_unique<DeclareVariableNode>(identifier.lexeme, type.lexeme, std::move(expression));
         return std::make_unique<ErrorNode>();
     }
 

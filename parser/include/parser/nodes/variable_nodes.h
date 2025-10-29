@@ -7,20 +7,20 @@ namespace parser
     class DeclareVariableNode : public ASTNode
     {
     public:
-    
-        DeclareVariableNode(std::string name, std::unique_ptr<ASTNode> expression);
-        DeclareVariableNode(std::string name);
+        DeclareVariableNode(std::string name, std::string type, std::unique_ptr<ASTNode> expression);
+        DeclareVariableNode(std::string name, std::string type);
 
         void Compile(compiler::CompilerContext& context) override;
         
         bool HasExpression() const;
         
-        std::string GetName() const;
+        const std::string GetName() const;
+        const std::string GetTypeName() const;
         ASTNode& GetExpression() const;
 
     private:
-
         std::string m_Name;
+        std::string m_TypeName;
         std::unique_ptr<ASTNode> m_Expression;
     };
 
