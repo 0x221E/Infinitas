@@ -1,9 +1,8 @@
 #pragma once
 
 #include <spdlog/spdlog.h>
-//#define CM_DEBUG
 
-#ifdef DEBUG
+#ifdef Debug
     #define LOG_TRACE(...) :: spdlog::trace(__VA_ARGS__)
     #define LOG_DEBUG(...) :: spdlog::debug(__VA_ARGS__)
     #define LOG_INFO(...) :: spdlog::info(__VA_ARGS__)
