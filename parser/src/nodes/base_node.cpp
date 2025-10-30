@@ -18,4 +18,9 @@ namespace parser
     {
         return m_RuntimeType;
     }
+
+    const NodeType ASTNode::GetNodeType() const
+    {
+	return m_Type;
+    }
 }

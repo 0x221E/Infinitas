@@ -44,7 +44,7 @@ namespace parser
     class ASTNode
     {
     public:
-        ASTNode();
+        ASTNode(); /** @todo Decide whether ASTNode's should store their own type. */
 
         virtual ~ASTNode() = default;
     
@@ -52,8 +52,9 @@ namespace parser
         virtual void Compile(compiler::CompilerContext& context) = 0;
     
     public:
-        void SetRuntimeType(NodeRuntimeType type);
+	const NodeType GetNodeType() const;
         const NodeRuntimeType GetRuntimeType() const;
+        void SetRuntimeType(NodeRuntimeType type);
 
     private:
         NodeType m_Type;
