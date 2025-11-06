@@ -36,7 +36,6 @@ add_subdirectory(parser)
 add_subdirectory(lexer)
 add_subdirectory(infinitas)
 
-add_subdirectory(vendor/spdlog)
 add_subdirectory(vendor/multiprecision-boost)
 
 #add_subdirectory(tests)
