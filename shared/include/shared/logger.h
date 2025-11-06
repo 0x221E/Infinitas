@@ -1,3 +1,17 @@
+/**
+ * @file logger.h
+ * @description Contains the templated logging functionality. Implemented as an alternative to using spdlog dependency.
+ *
+ * COPYRIGHT NOTICE.
+ *
+ * I do not own the rights for the code inside this file.
+ * The author disclaims copyright for this file.
+ *
+ * Credit to: Nathan Baggs
+ * His youtube channel: https://www.youtube.com/@nathanbaggs
+ * His twitch channel: https://www.twitch.tv/nathan_baggs
+ */
+
 #pragma once
 
 #include <source_location>
